@@ -1,0 +1,14 @@
+# Config for sway
+#
+# Read `man 5 sway` for a complete reference.
+
+# user config directory
+include $HOME/.config/sway/config.d/*
+
+output DP-2 mode 3440x1440@100Hz
+
+exec udiskie --tray --no-notify
+
+seat * xcursor_theme Adwaita 24
+
+bindsym $mod+shift+m exec ~/.config/sway/scripts/external_monitor.sh

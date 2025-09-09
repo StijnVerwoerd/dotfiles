@@ -1,0 +1,7 @@
+
+
+# left over hosts
+Host *
+	AddKeysToAGent yes
+	UseKeyChain yes
+	UpdateHostKeys yes
