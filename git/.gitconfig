@@ -1,3 +1,10 @@
 [user]
 	email = stijn.verwoerd@gmail.com
 	name = stijn
+
+[core]
+	editor = nvim
+
+[color]
+	ui = auto
+
