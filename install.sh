@@ -10,8 +10,6 @@ OLD_FILE_LIST=(
 	".config/fuzzel"
 	".config/ghostty"
 	".config/tmux"
-	".config/nvim"
-
 )
 
 PACKAGES=(
@@ -29,16 +27,36 @@ PACKAGES=(
 )
 
 # Install packages
-for package in "${PACKAGES}[@]"; do
-	pacman -Syu "${package}"
-done
+pacman -Syu --needed "${PACKAGES[@]}"
 
 # If files already exist, rename to backup
 for config in "${OLD_FILE_LIST[@]}"; do
-	# TODO: check for file or dir existence
-	if [[ -e "~/${config}" ]]; then
-		mv "~/${config}" "~/${config}.bak"
+	# check for file or dir existence
+	if [[ -e "$HOME/$config" ]]; then
+		# check if there is a symlink
+		if [[ -L "$HOME/$config" ]]; then
+			echo "Symlink present at $HOME/$config, removing it."
+			rm -rf "$HOME/$config"
+		fi
+		# check if there already is a backup
+		if [[ -e "$HOME/$config.bak" ]]; then
+			rm -rf "$HOME/$config.bak"
+		fi
+
+		echo "Backing up $HOME/$config -> $HOME/$config.bak"
+		mv "$HOME/$config" "$HOME/$config.bak"
 	fi
+done
+
+# Create the symlinks 
+for dir in */; do
+	# follow the pattern of .git & install.sh to exclude them from stow
+	case "$dir" in
+		.git/) continue ;;
+		install.sh/) continue ;;
+		scripts/) continue ;;
+		*) stow --target=$HOME "$dir" ;;
+	esac
 done
 
 
