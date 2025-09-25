@@ -36,7 +36,9 @@ done
 # If files already exist, rename to backup
 for config in "${OLD_FILE_LIST[@]}"; do
 	# TODO: check for file or dir existence
-	mv "~/${config}" "~/${config}.bak"
+	if [[ -e "~/${config}" ]]; then
+		mv "~/${config}" "~/${config}.bak"
+	fi
 done
 
 
