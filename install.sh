@@ -4,6 +4,7 @@ set -euo pipefail
 OLD_FILE_LIST=(
 	".gitconfig"
 	".tmux.conf"
+	".azotebg"
 	".config/sway"
 	".config/nvim"
 	".config/fish"
@@ -24,6 +25,7 @@ PACKAGES=(
 	"sway"
 	"waybar"
 	"bat"
+	"azote"
 )
 
 # Install packages
@@ -54,3 +56,6 @@ for pkg in configs/*/; do
     pkg=$(basename "$pkg")  # remove path and trailing slash
     stow --target="$HOME" -d configs "$pkg"
 done
+
+# Execute azote
+$HOME/.azotebg
