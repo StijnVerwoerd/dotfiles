@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 
 OLD_FILE_LIST=(
 	".gitconfig"
@@ -10,34 +11,36 @@ OLD_FILE_LIST=(
 	".config/fuzzel"
 	".config/ghostty"
 	".config/tmux"
+	".config/waybar"
 )
 
 PACKAGES=(
 	"nvim"
 	"ttf-0xproto-nerd"
 	"fish"
-	"flutter"
+	#"flutter" TODO: make a github download list
 	"tmux"
 	"git"
 	"ghostty"
-	"ssh"
+	#"ssh"
 	"sway"
 	"waybar"
 	"bat"
 )
 
 # Install packages
-pacman -Syu --needed "${PACKAGES[@]}"
+sudo pacman -S --needed "${PACKAGES[@]}"
 
 # If files already exist, rename to backup
 for config in "${OLD_FILE_LIST[@]}"; do
+	# check if there is a symlink
+	if [[ -L "$HOME/$config" ]]; then
+		echo "Symlink present at $HOME/$config, removing it."
+		unlink "$HOME/$config"
+	fi
+
 	# check for file or dir existence
 	if [[ -e "$HOME/$config" ]]; then
-		# check if there is a symlink
-		if [[ -L "$HOME/$config" ]]; then
-			echo "Symlink present at $HOME/$config, removing it."
-			rm -rf "$HOME/$config"
-		fi
 		# check if there already is a backup
 		if [[ -e "$HOME/$config.bak" ]]; then
 			rm -rf "$HOME/$config.bak"
@@ -49,15 +52,7 @@ for config in "${OLD_FILE_LIST[@]}"; do
 done
 
 # Create the symlinks 
-for dir in */; do
-	# follow the pattern of .git & install.sh to exclude them from stow
-	case "$dir" in
-		.git/) continue ;;
-		install.sh/) continue ;;
-		scripts/) continue ;;
-		*) stow --target=$HOME "$dir" ;;
-	esac
+for pkg in configs/*/; do
+    pkg=$(basename "$pkg")  # remove path and trailing slash
+    stow --target="$HOME" -d configs "$pkg"
 done
-
-
-
