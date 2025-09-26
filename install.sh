@@ -3,7 +3,6 @@ set -euo pipefail
 
 OLD_FILE_LIST=(
 	".gitconfig"
-	".ssh"
 	".tmux.conf"
 	".config/sway"
 	".config/nvim"
@@ -22,7 +21,6 @@ PACKAGES=(
 	"tmux"
 	"git"
 	"ghostty"
-	#"ssh"
 	"sway"
 	"waybar"
 	"bat"
